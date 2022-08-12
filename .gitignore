@@ -13,3 +13,12 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+build/
+build/*
+credentials/
+credentials/*
+.idea/
+__pycache__/
+*.png
+*.pdf

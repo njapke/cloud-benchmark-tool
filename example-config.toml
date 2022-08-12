@@ -1,0 +1,23 @@
+# TOML file to configure perf runner
+
+# Name of the project
+name = "name-of-project-under-test"
+
+# Path to the project to benchmark
+path = "path/to/project-under-test"
+
+projUri = "URI to clone project from"
+
+basePackage = "github.com/pelletier/go-toml/v2"
+
+# Benchmark Execution Duration (baseline: 1s) (remove)
+bed = "1s"
+
+# Number of instance runs (baseline: 3)
+# ir = 2
+
+# Number of suite runs (baseline: 3) (remove)
+sr = 1
+
+# Number of executions of single benchmark during a suite run (baseline: 5) (remove)
+iterations = 1
