@@ -1,4 +1,4 @@
-PROJECT_NAME := "ma-project"
+PROJECT_NAME := "cloud-benchmark-tool"
 PKG := "$(PROJECT_NAME)"
 
 .PHONY: dep build

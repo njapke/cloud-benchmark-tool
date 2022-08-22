@@ -8,7 +8,7 @@ import (
 //go:embed build/runner
 var runnerBytes []byte
 
-func generateStartupScript(projUri string, basePackage string, bed string, iterations int, sr int, orchestratorIp string) []byte {
+func generateStartupScript(projUri string, basePackage string, bed int, iterations int, sr int, orchestratorIp string, benchListPort string, msrmntReportPort string) []byte {
 	scriptFormatString := `#!/bin/bash
 
 # define the tasks that need to be done with the extracted content
@@ -16,7 +16,7 @@ run_benchmark_runner() {
     cd $WORK_DIR
     chmod +x runner
     git clone %s proj
-    ./runner -path $WORK_DIR/proj -base-package %s -bed %s -iterations %d -sr %d -orchestrator-ip %s
+    ./runner -path $WORK_DIR/proj -base-package %s -bed %d -iterations %d -sr %d -orchestrator-ip %s -benchmark-list-port %s -measurement-report-port %s
     # do something with the extracted content
 }
 
@@ -35,5 +35,5 @@ run_benchmark_runner
 exit 0
 __PAYLOAD_BEGINS__
 `
-	return append([]byte(fmt.Sprintf(scriptFormatString, projUri, basePackage, bed, iterations, sr, orchestratorIp)), runnerBytes...)
+	return append([]byte(fmt.Sprintf(scriptFormatString, projUri, basePackage, bed, iterations, sr, orchestratorIp, benchListPort, msrmntReportPort)), runnerBytes...)
 }

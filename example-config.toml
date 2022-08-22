@@ -11,10 +11,10 @@ projUri = "URI to clone project from"
 basePackage = "github.com/pelletier/go-toml/v2"
 
 # Benchmark Execution Duration (baseline: 1s) (remove)
-bed = "1s"
+bed = 1
 
 # Number of instance runs (baseline: 3)
-# ir = 2
+ir = 2
 
 # Number of suite runs (baseline: 3) (remove)
 sr = 1

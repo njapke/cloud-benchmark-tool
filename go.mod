@@ -1,4 +1,4 @@
-module ma-project
+module cloud-benchmark-tool
 
 go 1.18
 

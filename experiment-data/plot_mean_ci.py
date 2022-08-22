@@ -28,12 +28,12 @@ df_2["bed"] = df_2["bed"].apply(lambda s : int(s[:-1]))
 df_3["bed"] = df_3["bed"].apply(lambda s : int(s[:-1]))
 
 # get all benchmarks
-benchmarks = set(df_1["b_name"])
+benchmarks = set(df_2["b_name"])
 
 # get data across a dimension
 for bench in benchmarks:
     print("Processing "+bench)
-    df_filtered = df_1[df_1["b_name"] == bench]
+    df_filtered = df_2[df_2["b_name"] == bench]
     means = []
     ci_bounds = []
     for i in range(1,6): # 1 to 5

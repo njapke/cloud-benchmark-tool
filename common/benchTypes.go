@@ -13,6 +13,9 @@ type (
 	Measurement struct {
 		N       int
 		NsPerOp float64
+		BedPos  int
+		ItPos   int
+		SrPos   int
 	}
 
 	Benchmark struct {
@@ -24,11 +27,12 @@ type (
 	}
 
 	queueElem struct {
-		benchmark  *Benchmark
-		bed        string
-		iterations int
-		sr         int
-		ir         int
+		benchmark *Benchmark
+		bedSetup  int
+		itSetup   int
+		srSetup   int
+		irSetup   int
+		irPos     int
 	}
 )
 
@@ -129,54 +133,60 @@ func CollectBenchmarks(projName string, projPath string, basePackage string) (*[
 	return &benchmarks, nil
 }
 
-func (bench *Benchmark) RunBenchmark(bed string) error {
-	cmd := exec.Command("go", "test", "-benchtime", bed, "-bench", bench.NameRegexp, bench.Package)
-	cmd.Dir = bench.ProjectPath
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
-	}
-
-	// split output into lines
-	lines := strings.Split(string(out), "\n")
-
-	// parse output
-	for i := 0; i < len(lines); i++ {
-		isBench, err := regexp.MatchString("^Benchmark", lines[i])
+func (bench *Benchmark) RunBenchmark(bed int, itPos int, srPos int) error {
+	for i := 0; i < bed; i++ { // each iteration on this level is 1s of benchtime, repeat until bed is reached
+		cmd := exec.Command("go", "test", "-benchtime", "1s", "-bench", bench.NameRegexp, bench.Package)
+		cmd.Dir = bench.ProjectPath
+		out, err := cmd.CombinedOutput()
 		if err != nil {
 			return errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
 		}
 
-		if isBench {
-			b, err := benchparser.ParseLine(lines[i])
+		// split output into lines
+		lines := strings.Split(string(out), "\n")
+
+		// parse output
+		for j := 0; j < len(lines); j++ {
+			isBench, err := regexp.MatchString("^Benchmark", lines[j])
 			if err != nil {
 				return errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
 			}
 
-			// save new measurement
-			newMsrmnt := Measurement{
-				N:       b.N,
-				NsPerOp: b.NsPerOp,
-			}
+			if isBench {
+				b, err := benchparser.ParseLine(lines[j])
+				if err != nil {
+					return errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
+				}
 
-			bench.Measurement = append(bench.Measurement, newMsrmnt)
+				// save new measurement
+				newMsrmnt := Measurement{
+					N:       b.N,
+					NsPerOp: b.NsPerOp,
+					BedPos:  i + 1,
+					ItPos:   itPos,
+					SrPos:   srPos,
+				}
+
+				bench.Measurement = append(bench.Measurement, newMsrmnt)
+			}
 		}
 	}
 
 	return nil
 }
 
-func (bench *Benchmark) RecordMeasurement(bed string, iterations int, sr int, ir int) {
+func (bench *Benchmark) RecordMeasurement(bedSetup int, itSetup int, srSetup int, irSetup int, irPos int) {
 	if msrmntQueue == nil {
 		msrmntQueue = make(chan queueElem, 500)
 		go dbQueueConsumer()
 	}
 	currMsrmnt := queueElem{
-		benchmark:  bench,
-		bed:        bed,
-		iterations: iterations,
-		sr:         sr,
-		ir:         ir,
+		benchmark: bench,
+		bedSetup:  bedSetup,
+		itSetup:   itSetup,
+		srSetup:   srSetup,
+		irSetup:   irSetup,
+		irPos:     irPos,
 	}
 	msrmntQueue <- currMsrmnt
 }
@@ -189,7 +199,7 @@ func dbQueueConsumer() {
 		}
 		for i := 0; i < len(elem.benchmark.Measurement); i++ {
 			currMsrmnt := elem.benchmark.Measurement[i]
-			insertMeasurement(elem.benchmark.Name, currMsrmnt.N, currMsrmnt.NsPerOp, elem.bed, elem.iterations, elem.sr, elem.ir)
+			insertMeasurement(elem.benchmark.Name, currMsrmnt.N, currMsrmnt.NsPerOp, elem.bedSetup, elem.itSetup, elem.srSetup, elem.irSetup, currMsrmnt.BedPos, currMsrmnt.ItPos, currMsrmnt.SrPos, elem.irPos)
 		}
 	}
 }

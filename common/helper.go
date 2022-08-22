@@ -21,7 +21,7 @@ func FisherYatesShuffle(listRef *[]int) {
 }
 
 // createExtendedPerm creates a randomly shuffled array, which contains each number
-// in 0,...,n-1 exactly i times. This is to be used to shuffle i iterations of n benchmarks.
+// in 0,...,n-1 exactly i times. This is to be used to shuffle i itSetup of n benchmarks.
 func CreateExtendedPerm(n int, i int) *[]int {
 	list := make([]int, n*i)
 	for m := 0; m < n*i; m++ {

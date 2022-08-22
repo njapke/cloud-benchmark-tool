@@ -124,10 +124,14 @@ func initializeDB(cleanDb bool) {
     	"m_id" INTEGER PRIMARY KEY AUTOINCREMENT,
 		"n" INT NOT NULL,
 		"ns_per_op" FLOAT NOT NULL,
-		"bed" TEXT NOT NULL,
-		"iterations" INT NOT NULL,
-		"sr" INT NOT NULL,
-		"ir" INT NOT NULL,
+		"bed_setup" INT NOT NULL,
+		"it_setup" INT NOT NULL,
+		"sr_setup" INT NOT NULL,
+		"ir_setup" INT NOT NULL,
+		"bed_pos" INT NOT NULL,
+		"it_pos" INT NOT NULL,
+		"sr_pos" INT NOT NULL,
+		"ir_pos" INT NOT NULL,
 		"b_name" TEXT NOT NULL,
 		FOREIGN KEY(b_name) REFERENCES benchmark(b_name)
 	  );`
@@ -173,15 +177,15 @@ func insertBenchmark(bName string, subPackage string, pName string) {
 	}
 }
 
-func insertMeasurement(bName string, n int, nsPerOp float64, bed string, iterations int, sr int, ir int) {
+func insertMeasurement(bName string, n int, nsPerOp float64, bedSetup int, itSetup int, srSetup int, irSetup int, bedPos int, itPos int, srPos int, irPos int) {
 	log.Debug("Inserting measurement record ...")
-	insertMeasurementSQL := `INSERT INTO measurement(n, ns_per_op, bed, iterations, sr, ir, b_name) VALUES (?, ?, ?, ?, ?, ?, ?)`
+	insertMeasurementSQL := `INSERT INTO measurement(n, ns_per_op, bed_setup, it_setup, sr_setup, ir_setup, bed_pos, it_pos, sr_pos, ir_pos, b_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	statement, err := db.Prepare(insertMeasurementSQL) // Prepare statement
 	// This is good to avoid SQL injections
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	_, err = statement.Exec(n, nsPerOp, bed, iterations, sr, ir, bName)
+	_, err = statement.Exec(n, nsPerOp, bedSetup, itSetup, srSetup, irSetup, bedPos, itPos, srPos, irPos, bName)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
