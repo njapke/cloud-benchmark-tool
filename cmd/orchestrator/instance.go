@@ -4,8 +4,7 @@ import (
 	computepb "google.golang.org/genproto/googleapis/cloud/compute/v1"
 )
 
-// TODO startup script
-func generateNewInstance(name string, orchestratorName string) *computepb.Instance {
+func generateNewInstance(name string, orchestratorName string, gcpProjectName string, gcpBucketName string) *computepb.Instance {
 	newInstance := computepb.Instance{
 		CanIpForward: FalsePointer(),
 		Disks: []*computepb.AttachedDisk{
@@ -15,8 +14,8 @@ func generateNewInstance(name string, orchestratorName string) *computepb.Instan
 				DeviceName: StringPointer(name),
 				InitializeParams: &computepb.AttachedDiskInitializeParams{
 					DiskSizeGb:  Int64Pointer(10),
-					DiskType:    StringPointer("projects/masterarbeit-353409/zones/europe-west3-c/diskTypes/pd-balanced"),
-					SourceImage: StringPointer("projects/masterarbeit-353409/global/images/arch-benchmark-base"),
+					DiskType:    StringPointer("projects/" + gcpProjectName + "/zones/europe-west3-c/diskTypes/pd-balanced"),
+					SourceImage: StringPointer("projects/" + gcpProjectName + "/global/images/arch-benchmark-base"),
 				},
 				Mode: StringPointer("READ_WRITE"),
 				Type: StringPointer("PERSISTENT"),
@@ -31,20 +30,20 @@ func generateNewInstance(name string, orchestratorName string) *computepb.Instan
 					},
 				},
 				StackType:  StringPointer("IPV4_ONLY"),
-				Subnetwork: StringPointer("projects/masterarbeit-353409/regions/europe-west3/subnetworks/default"),
+				Subnetwork: StringPointer("projects/" + gcpProjectName + "/regions/europe-west3/subnetworks/default"),
 			},
 		},
-		MachineType: StringPointer("projects/masterarbeit-353409/zones/europe-west3-c/machineTypes/n2-standard-2"),
+		MachineType: StringPointer("projects/" + gcpProjectName + "/zones/europe-west3-c/machineTypes/n2-standard-2"),
 		Metadata: &computepb.Metadata{
 			Items: []*computepb.Items{
 				{
 					Key:   StringPointer("startup-script-url"),
-					Value: StringPointer("https://storage.googleapis.com/instance-runner-startup-script/" + orchestratorName + "/startup.sh"),
+					Value: StringPointer("https://storage.googleapis.com/" + gcpBucketName + "/" + orchestratorName + "/startup.sh"),
 				},
 			},
 		},
 		Name: StringPointer(name),
-		Zone: StringPointer("projects/masterarbeit-353409/zones/europe-west3-c"),
+		Zone: StringPointer("projects/" + gcpProjectName + "/zones/europe-west3-c"),
 	}
 	return &newInstance
 }

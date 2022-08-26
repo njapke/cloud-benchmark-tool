@@ -18,7 +18,7 @@ def simulate_mean(data):
         res = np.append(res, data[idx])
     return res.mean()
 
-def bootstrap_distribution(data, it = 1000):
+def bootstrap_distribution(data, it = 10000):
     res = np.array([])
     for i in range(it):
         res = np.append(res, simulate_mean(data))

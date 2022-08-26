@@ -10,14 +10,18 @@ projUri = "URI to clone project from"
 
 basePackage = "github.com/pelletier/go-toml/v2"
 
+gcpProject = "your-project-1234"
+
+gcpBucket = "your-bucket"
+
 # Benchmark Execution Duration (baseline: 1s) (remove)
 bed = 1
 
-# Number of instance runs (baseline: 3)
-ir = 2
+# Number of executions of single benchmark during a suite run (baseline: 5) (remove)
+it = 1
 
 # Number of suite runs (baseline: 3) (remove)
 sr = 1
 
-# Number of executions of single benchmark during a suite run (baseline: 5) (remove)
-iterations = 1
+# Number of instance runs (baseline: 3)
+ir = 2

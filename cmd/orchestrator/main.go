@@ -28,6 +28,8 @@ type (
 		Path        string
 		ProjUri     string
 		BasePackage string
+		GCPProject  string
+		GCPBucket   string
 		Bed         int
 		It          int
 		Sr          int
@@ -184,13 +186,13 @@ func main() {
 		currIrPos.Mu.Unlock()
 
 		// upload startup script
-		uploadBytes(script, ca.InstanceName, gclientStorage, ctx)
+		uploadBytes(script, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, gclientStorage, ctx)
 
 		listOfInstances := make([]string, 3)
 
 		for j := 0; j < instances; j++ {
 			name := fmt.Sprintf("%s-instance-%d", ca.InstanceName, j)
-			createInstance(name, ca.InstanceName, gclientCompute, ctx)
+			createInstance(name, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, gclientCompute, ctx)
 			listOfInstances = append(listOfInstances, name)
 			wgIr.Add(1)
 		}
@@ -199,7 +201,7 @@ func main() {
 		// wait for results
 		wgIr.Wait()
 		// shutdown instances
-		shutdownAllInstances(&listOfInstances, gclientCompute, ctx)
+		shutdownAllInstances(&listOfInstances, cfg.GCPProject, gclientCompute, ctx)
 
 		// get next setup
 		nextSetup()

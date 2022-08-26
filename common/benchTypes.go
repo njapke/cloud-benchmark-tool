@@ -46,7 +46,8 @@ var msrmntQueue chan queueElem
 // Every substring around '/' seems to be treated like its own regular expression. As far as I can tell,
 // this behavior is not documented. See https://github.com/golang/go/blob/master/src/testing/match.go at func splitRegexp.
 func maskNameRegexp(name string) string {
-	nameSplit := strings.Split(name, "/")
+	nameQuoted := regexp.QuoteMeta(name)
+	nameSplit := strings.Split(nameQuoted, "/")
 	nameRegexp := ""
 
 	for i := 0; i < len(nameSplit)-1; i++ {

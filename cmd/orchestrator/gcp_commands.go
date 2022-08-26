@@ -9,11 +9,11 @@ import (
 	computepb "google.golang.org/genproto/googleapis/cloud/compute/v1"
 )
 
-func uploadBytes(toUpload []byte, orchestratorName string, gclient *storage.Client, ctx context.Context) {
-	wc := gclient.Bucket("instance-runner-startup-script").Object(orchestratorName + "/startup.sh").NewWriter(ctx)
+func uploadBytes(toUpload []byte, orchestratorName string, gcpProjectName string, gcpBucketName string, gclient *storage.Client, ctx context.Context) {
+	wc := gclient.Bucket(gcpBucketName).Object(orchestratorName + "/startup.sh").NewWriter(ctx)
 	wc.ContentType = "text/plain"
 	wc.Metadata = map[string]string{
-		"x-goog-project-id": "masterarbeit-353409",
+		"x-goog-project-id": gcpProjectName,
 	}
 
 	log.Debugln("Uploading data to bucket")
@@ -29,13 +29,13 @@ func uploadBytes(toUpload []byte, orchestratorName string, gclient *storage.Clie
 	log.Debugln("Finished uploading data to bucket")
 }
 
-func createInstance(name string, orchestratorName string, gclient *compute.InstancesClient, ctx context.Context) {
+func createInstance(name string, orchestratorName string, gcpProjectName string, gcpBucketName string, gclient *compute.InstancesClient, ctx context.Context) {
 	log.Debugln("Creating instance " + name)
-	instance := generateNewInstance(name, orchestratorName)
+	instance := generateNewInstance(name, orchestratorName, gcpProjectName, gcpBucketName)
 
 	req := computepb.InsertInstanceRequest{
 		InstanceResource: instance,
-		Project:          "masterarbeit-353409",
+		Project:          gcpProjectName,
 		Zone:             "europe-west3-c",
 	}
 
@@ -51,10 +51,10 @@ func createInstance(name string, orchestratorName string, gclient *compute.Insta
 	log.Debugln("Finished creating instance " + name)
 }
 
-func shutdownAllInstances(toShutdown *[]string, gclient *compute.InstancesClient, ctx context.Context) {
+func shutdownAllInstances(toShutdown *[]string, gcpProjectName string, gclient *compute.InstancesClient, ctx context.Context) {
 	log.Debugln("Removing all instances")
 	listReq := computepb.ListInstancesRequest{
-		Project: "masterarbeit-353409",
+		Project: gcpProjectName,
 		Zone:    "europe-west3-c",
 	}
 
@@ -74,7 +74,7 @@ func shutdownAllInstances(toShutdown *[]string, gclient *compute.InstancesClient
 			log.Debugln("Removing instance " + *instance.Name)
 			delReq := computepb.DeleteInstanceRequest{
 				Instance: *instance.Name,
-				Project:  "masterarbeit-353409",
+				Project:  gcpProjectName,
 				Zone:     "europe-west3-c",
 			}
 			op, err := gclient.Delete(ctx, &delReq)

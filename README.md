@@ -6,6 +6,8 @@ Benutze RMAD als Instabilitätsmaß (oder anderes relatives Streuungsmaß in % d
 
 Grenze zur Instabilität: RMAD > 0.01 (1% des Mittels Abweichung)
 
+Probiere unterschiedliche Schätzansätze für CV, RMAD und RCIW
+
 Absolute Minimalkonfiguration:
 - IR: 2?
 - SR: 1
