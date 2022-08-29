@@ -14,6 +14,9 @@ gcpProject = "your-project-1234"
 
 gcpBucket = "your-bucket"
 
+# This tool needs a custom linux image with access to the Go compiler suite and git
+gcpImage = "your-image"
+
 # Benchmark Execution Duration (baseline: 1s) (remove)
 bed = 1
 

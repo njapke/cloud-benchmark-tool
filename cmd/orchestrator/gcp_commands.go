@@ -29,9 +29,9 @@ func uploadBytes(toUpload []byte, orchestratorName string, gcpProjectName string
 	log.Debugln("Finished uploading data to bucket")
 }
 
-func createInstance(name string, orchestratorName string, gcpProjectName string, gcpBucketName string, gclient *compute.InstancesClient, ctx context.Context) {
+func createInstance(name string, orchestratorName string, gcpProjectName string, gcpBucketName string, gcpImageName string, gclient *compute.InstancesClient, ctx context.Context) {
 	log.Debugln("Creating instance " + name)
-	instance := generateNewInstance(name, orchestratorName, gcpProjectName, gcpBucketName)
+	instance := generateNewInstance(name, orchestratorName, gcpProjectName, gcpBucketName, gcpImageName)
 
 	req := computepb.InsertInstanceRequest{
 		InstanceResource: instance,

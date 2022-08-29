@@ -8,41 +8,8 @@ Created on Wed Aug 24 11:54:19 2022
 
 import numpy as np
 import pandas as pd
-
-# Initialize RNG
-rng = np.random.default_rng()
-
-# Coefficient of Variation
-def cv(data):
-    m = data.mean()
-    return np.sqrt(1/(len(data)) * ((data - m)**2).sum() ) / m
-
-# Relative Median Absolute Deviation
-def rmad(data):
-    m = np.median(data)
-    return np.median(np.absolute(data - m)) / m
-
-# Resample mean estimates for bootstrap
-def simulate_mean(data):
-    res = np.array([])
-    for _ in range(len(data)):
-        idx = rng.integers(0,len(data))
-        res = np.append(res, data[idx])
-    return res.mean()
-
-# Calculate bootstrap distribution of simulated means
-def bootstrap_distribution(data, it = 1000): # TODO optimize
-    res = np.array([])
-    for i in range(it):
-        res = np.append(res, simulate_mean(data))
-    res.sort()
-    return res
-
-# Relative Confidence Interval Width
-def rciw(data, it = 1000): # 10_000 is better, but takes ages
-    bs_dist = bootstrap_distribution(data, it) # TODO optimize
-    p = np.percentile(bs_dist, [2.5, 97.5]) # 95% CI bounds
-    return np.absolute(p[1] - p[0]) / data.mean()
+import json
+import instability as inst
 
 # read data
 df = pd.read_csv("experiment.csv", index_col="m_id")
@@ -57,7 +24,7 @@ sr_setup = df["sr_setup"][1]
 ir_setup = df["ir_setup"][1]
 
 # Select instability measure
-calc_inst = rmad
+calc_inst = inst.rmad
 
 # Select threshold to mark benchmarks as unstable
 ts = 0.01
@@ -124,9 +91,15 @@ for b in range(len(benchmarks)):
     
     min_config[benchmarks[b]] = (bench_ir,bench_sr,bench_it,bench_bed)
 
+with open("min_config.json","w") as f:
+    json.dump(min_config, f)
 
-
-
+np.savez("arrays.npz",
+         instability_overall=instability_overall,
+         instability_within_ir=instability_within_ir,
+         instability_within_sr=instability_within_sr,
+         instability_within_it=instability_within_it,
+         instability_matrix=instability_matrix)
 
 
 

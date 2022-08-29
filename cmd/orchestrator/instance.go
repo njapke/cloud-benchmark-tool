@@ -4,7 +4,7 @@ import (
 	computepb "google.golang.org/genproto/googleapis/cloud/compute/v1"
 )
 
-func generateNewInstance(name string, orchestratorName string, gcpProjectName string, gcpBucketName string) *computepb.Instance {
+func generateNewInstance(name string, orchestratorName string, gcpProjectName string, gcpBucketName string, gcpImageName string) *computepb.Instance {
 	newInstance := computepb.Instance{
 		CanIpForward: FalsePointer(),
 		Disks: []*computepb.AttachedDisk{
@@ -15,7 +15,7 @@ func generateNewInstance(name string, orchestratorName string, gcpProjectName st
 				InitializeParams: &computepb.AttachedDiskInitializeParams{
 					DiskSizeGb:  Int64Pointer(10),
 					DiskType:    StringPointer("projects/" + gcpProjectName + "/zones/europe-west3-c/diskTypes/pd-balanced"),
-					SourceImage: StringPointer("projects/" + gcpProjectName + "/global/images/arch-benchmark-base"),
+					SourceImage: StringPointer("projects/" + gcpProjectName + "/global/images/" + gcpImageName),
 				},
 				Mode: StringPointer("READ_WRITE"),
 				Type: StringPointer("PERSISTENT"),

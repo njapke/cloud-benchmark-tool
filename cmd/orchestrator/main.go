@@ -30,6 +30,7 @@ type (
 		BasePackage string
 		GCPProject  string
 		GCPBucket   string
+		GCPImage    string
 		Bed         int
 		It          int
 		Sr          int
@@ -192,7 +193,7 @@ func main() {
 
 		for j := 0; j < instances; j++ {
 			name := fmt.Sprintf("%s-instance-%d", ca.InstanceName, j)
-			createInstance(name, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, gclientCompute, ctx)
+			createInstance(name, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, cfg.GCPImage, gclientCompute, ctx)
 			listOfInstances = append(listOfInstances, name)
 			wgIr.Add(1)
 		}
