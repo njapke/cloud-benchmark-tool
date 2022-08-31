@@ -9,22 +9,23 @@ Created on Wed Aug 24 11:54:19 2022
 import numpy as np
 import pandas as pd
 import json
-import instability as inst
+import stat_functions as st
 
 # read data
 df = pd.read_csv("experiment.csv", index_col="m_id")
 
 # get all benchmarks
-benchmarks = list(set(df["b_name"]))
+benchmarks = np.array(df["b_name"].drop_duplicates())
 
 # get setup variables
 bed_setup = df["bed_setup"][1]
 it_setup = df["it_setup"][1]
 sr_setup = df["sr_setup"][1]
 ir_setup = df["ir_setup"][1]
+df.drop(columns=["bed_setup", "it_setup", "sr_setup", "ir_setup"], inplace=True)
 
 # Select instability measure
-calc_inst = inst.rmad
+calc_inst = st.rciw
 
 # Select threshold to mark benchmarks as unstable
 ts = 0.01
@@ -65,7 +66,7 @@ for b in range(len(benchmarks)):
     instability_matrix[b,2] = (instability_within_sr[b] > ts).sum() / len(instability_within_sr[b].flatten())
     instability_matrix[b,3] = (instability_within_it[b] > ts).sum() / len(instability_within_it[b].flatten())
     
-    bench_ir = 3 if instability_matrix[b,0] == 1 else 2
+    bench_ir = 3 if instability_matrix[b,0] == 1 else 2 # nicht sinnvoll
     
     bench_sr = 3
     if instability_matrix[b,1] < 0.1:

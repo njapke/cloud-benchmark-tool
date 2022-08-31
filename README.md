@@ -9,14 +9,10 @@ Grenze zur Instabilität: RMAD > 0.01 (1% des Mittels Abweichung)
 Probiere unterschiedliche Schätzansätze für CV, RMAD und RCIW
 
 Absolute Minimalkonfiguration:
-- IR: 2?
+- IR: nicht anfassen
 - SR: 1
 - It: 3
 - BED: 1s
 
 
-
-stable overall -> reduce ir (how advisable is this, as the randomness comes from the cloud?)
-stable within ir -> reduce sr
-stable within sr -> reduce iterations
-stable within it -> reduce benchtime
+finde config mit ir 1, verifiziere mit ir 2 und 3
