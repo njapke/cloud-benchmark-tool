@@ -47,7 +47,7 @@ ir_setup = df["ir_setup"][1]
 df.drop(columns=["bed_setup", "it_setup", "sr_setup", "ir_setup"], inplace=True)
 
 # Select instability measure
-calc_inst = st.rmad
+calc_inst = st.rciw
 
 # Select threshold to mark benchmarks as unstable
 ts = 0.01
@@ -80,13 +80,13 @@ result_df = pd.DataFrame(res, columns=["Benchmark","Config","Instability","Time"
 
 reduced_res = result_df[result_df["Instability"] < ts]
 
-min_config = {}
+min_config_idx = []
 for b in range(len(benchmarks)):
     bench = benchmarks[b]
     b_res = reduced_res[reduced_res["Benchmark"] == bench]
     if b_res.empty:
         b_full = result_df[result_df["Benchmark"] == bench]
-        min_config[bench] = b_full.iloc[-1]["Config"]
+        min_config_idx.append(b_full.iloc[-1].name)
         continue
     
     min_time = b_res["Time"].min()
@@ -95,9 +95,19 @@ for b in range(len(benchmarks)):
     b_min_time = b_res[b_res["Time"] == min_time]
     min_inst_idx = b_min_time["Instability"].idxmin()
     
-    min_config[bench] = b_min_time.loc[min_inst_idx]["Config"]
-    
+    min_config_idx.append(min_inst_idx)
 
+min_config_res = result_df.iloc[min_config_idx]
+full_config_res = result_df[result_df["Config"] == (3,5,5)]
+
+mean_diff = {}
+ci_iou = {}
+for bench in benchmarks:
+    bench_min = min_config_res[min_config_res["Benchmark"] == bench].iloc[0]
+    bench_full = full_config_res[full_config_res["Benchmark"] == bench].iloc[0]
+    
+    mean_diff[bench] = np.absolute(bench_min["Mean"] - bench_full["Mean"]) / bench_full["Mean"]
+    ci_iou[bench] = st.iou(bench_min["CI"], bench_full["CI"])
 
 
 

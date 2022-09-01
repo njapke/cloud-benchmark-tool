@@ -11,7 +11,7 @@ import scipy as sp
 from scipy.interpolate import interp1d
 
 # Initialize RNG
-rng = np.random.default_rng()
+rng = np.random.default_rng(42)
 
 # Estimator based on paper "Kullback-Leibler divergence estimation of continuous distributions"
 def better_kl(d1, d2):
@@ -43,20 +43,40 @@ def rmad(data):
     m = np.median(data)
     return np.median(np.absolute(data - m)) / m
 
-# Relative Confidence Interval Width
+# Relative Confidence Interval Width (mean, bootstrap)
 def rciw(data, it = 10000, cl = 99):
-    bs_dist = np.mean(rng.choice(data, (it, len(data))), axis=1)
-    
-    lower = (100 - cl) / 2
-    upper = cl + lower
-    p = np.percentile(bs_dist, [lower, upper]) # CI bounds
+    p = ci_bootstrap(data, it, cl)
     return np.absolute(p[1] - p[0]) / data.mean()
 
+# CI bounds of mean with bootstrap
 def ci_bootstrap(data, it = 10000, cl = 99):
     bs_dist = np.mean(rng.choice(data, (it, len(data))), axis=1)
     
     lower = (100 - cl) / 2
     upper = cl + lower
-    p = np.percentile(bs_dist, [lower, upper]) # CI bounds
-    return p
+    return np.percentile(bs_dist, [lower, upper]) # CI bounds
+
+# Intersection over Union for intervals
+def iou(i1, i2):
+    min1 = min(i1)
+    max1 = max(i1)
+    min2 = min(i2)
+    max2 = max(i2)
+    
+    lower_min = min(min1, min2)
+    higher_min = max(min1, min2)
+    lower_max = min(max1, max2)
+    higher_max = max(max1, max2)
+    
+    length_inner = abs(lower_max - higher_min) if higher_min < lower_max else 0
+    length_outer = abs(higher_max - lower_min)
+    
+    return length_inner / length_outer
+
+
+
+
+
+
+
 
