@@ -46,8 +46,9 @@ sr_setup = df["sr_setup"][1]
 ir_setup = df["ir_setup"][1]
 df.drop(columns=["bed_setup", "it_setup", "sr_setup", "ir_setup"], inplace=True)
 
-# Select instability measure
-calc_inst = st.rciw
+# Select instability measure and CI method
+calc_inst = st.rciw_median_t
+calc_ci = st.ci_bootstrap_median_t
 
 # Select threshold to mark benchmarks as unstable
 ts = 0.01
@@ -66,13 +67,13 @@ for b in range(len(benchmarks)):
                  & (df["bed_pos"] <= c[2])]
         data = np.array(dft["ns_per_op"])
         
-        inst = calc_inst(data) # instability
+        inst = calc_inst(data, it=10000) # instability
         
         time = c[0]*c[1]*c[2] # time per instance in seconds
         
         mean = data.mean()
         
-        ci = st.ci_bootstrap(data)
+        ci = calc_ci(data, it=10000)
         
         res.append([bench, c, inst, time, mean, ci])
 
