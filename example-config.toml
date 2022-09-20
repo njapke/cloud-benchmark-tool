@@ -8,6 +8,8 @@ path = "path/to/project-under-test"
 
 projUri = "URI to clone project from"
 
+tag = "version of project"
+
 basePackage = "github.com/pelletier/go-toml/v2"
 
 gcpProject = "your-project-1234"

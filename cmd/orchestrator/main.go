@@ -27,6 +27,7 @@ type (
 		Name        string
 		Path        string
 		ProjUri     string
+		Tag         string
 		BasePackage string
 		GCPProject  string
 		GCPBucket   string
@@ -174,7 +175,7 @@ func main() {
 	for i := 0; i < 1; i++ {
 		// TODO temporary emission of startup script; works perfectly in tests
 		currSetup.Mu.Lock()
-		script := generateStartupScript(cfg.ProjUri, cfg.BasePackage, currSetup.Bed, currSetup.Iterations, currSetup.Sr, ca.Ip, ca.BenchmarkListPort, ca.MeasurementReportPort)
+		script := generateStartupScript(cfg.ProjUri, cfg.Tag, cfg.BasePackage, currSetup.Bed, currSetup.Iterations, currSetup.Sr, ca.Ip, ca.BenchmarkListPort, ca.MeasurementReportPort)
 		instances := currSetup.Ir
 		log.Debugf("Test No %d\nSetup: BED = %d, It = %d, SR = %d, IR = %d", i, currSetup.Bed, currSetup.Iterations, currSetup.Sr, currSetup.Ir)
 		currSetup.Mu.Unlock()

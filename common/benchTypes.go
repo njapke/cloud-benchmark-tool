@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 	benchparser "golang.org/x/tools/benchmark/parse"
 )
 
@@ -64,11 +65,15 @@ func CollectBenchmarks(projName string, projPath string, basePackage string) (*[
 	insertProject(projName, basePackage)
 
 	// run all benchmarks and get output
-	cmd := exec.Command("go", "test", "-benchtime", "1x", "-bench", ".", "./...")
+	cmd := exec.Command("go", "test", "-timeout", "0", "-benchtime", "1x", "-bench", ".", "./...")
 	cmd.Dir = projPath
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
+		if exiterr, ok := err.(*exec.ExitError); ok {
+			log.Debugf("Exit Status: %d", exiterr.ExitCode())
+		} else {
+			return nil, errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
+		}
 	}
 
 	// allocate list for benchmarks
