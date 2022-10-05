@@ -1,0 +1,31 @@
+# TOML file to configure perf runner
+
+# Name of the project
+name = "kubo"
+
+# Path to the project to benchmark
+path = "/home/njapke/kubo"
+
+projUri = "https://github.com/ipfs/kubo.git"
+
+tag = "v0.15.0"
+
+basePackage = "github.com/ipfs/kubo"
+
+gcpProject = "masterarbeit-353409"
+
+gcpBucket = "instance-runner-startup-script"
+
+gcpImage = "arch-benchmark-base"
+
+# Benchmark Execution Duration (baseline: 1s)
+bed = 5
+
+# Number of executions of single benchmark during a suite run (baseline: 5)
+it = 5
+
+# Number of suite runs (baseline: 3)
+sr = 3
+
+# Number of instance runs (baseline: 3)
+ir = 3

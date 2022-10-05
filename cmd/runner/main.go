@@ -84,7 +84,7 @@ func main() {
 			log.Debugf("Executing %s with iteration %d of %d", (*benchmarks)[curr].Name, itCounts[curr], ca.Iterations)
 			err := (*benchmarks)[curr].RunBenchmark(ca.Bed, itCounts[curr], i)
 			if err != nil {
-				log.Fatal(err)
+				log.Debug(err)
 			}
 		}
 		log.Debugf("Finished Suite Run %d of %d", i, ca.Sr)

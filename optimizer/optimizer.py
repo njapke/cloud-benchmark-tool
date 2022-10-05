@@ -8,7 +8,6 @@ Created on Wed Aug 31 14:42:38 2022
 
 import numpy as np
 import pandas as pd
-import json
 import stat_functions as st
 
 class ConfigCounter:
@@ -34,7 +33,7 @@ class ConfigCounter:
         raise StopIteration
 
 # read data
-df = pd.read_csv("experiment.csv", index_col="m_id")
+df = pd.read_csv("toml.csv", index_col="m_id")
 
 # get all benchmarks
 benchmarks = np.array(df["b_name"].drop_duplicates())
@@ -47,8 +46,8 @@ ir_setup = df["ir_setup"][1]
 df.drop(columns=["bed_setup", "it_setup", "sr_setup", "ir_setup"], inplace=True)
 
 # Select instability measure and CI method
-calc_inst = st.rmad
-calc_ci = st.ci_bootstrap_mean_p
+calc_inst = st.cv
+calc_ci = st.ci_bootstrap_median_p
 calc_avg = np.median
 #calc_avg = np.mean
 
@@ -77,9 +76,9 @@ for b in range(len(benchmarks)):
         
         ci = calc_ci(data, it=10000)
         
-        res.append([bench, c, inst, time, avg, ci])
+        res.append([bench, c, inst, time, avg, min(ci), max(ci)])
 
-result_df = pd.DataFrame(res, columns=["Benchmark","Config","Instability","Time","Average","CI"])
+result_df = pd.DataFrame(res, columns=["Benchmark","Config","Instability","Time","Average","CI Lower","CI Upper"])
 
 reduced_res = result_df[result_df["Instability"] < ts]
 
@@ -103,19 +102,30 @@ for b in range(len(benchmarks)):
 min_config_res = result_df.iloc[min_config_idx]
 full_config_res = result_df[result_df["Config"] == (3,5,5)]
 
-avg_diff = {}
-ci_iou = {}
+quality_diff = []
 for bench in benchmarks:
     bench_min = min_config_res[min_config_res["Benchmark"] == bench].iloc[0]
     bench_full = full_config_res[full_config_res["Benchmark"] == bench].iloc[0]
     
-    avg_diff[bench] = np.absolute(bench_min["Average"] - bench_full["Average"]) / bench_full["Average"]
-    ci_iou[bench] = st.iou(bench_min["CI"], bench_full["CI"])
+    time_saved = bench_full["Time"] - bench_min["Time"]
+    avg_diff = (bench_min["Average"] - bench_full["Average"]) / bench_full["Average"]
+    
+    ci_l_min = bench_min["CI Lower"]
+    ci_u_min = bench_min["CI Upper"]
+    ci_l_full = bench_full["CI Lower"]
+    ci_u_full = bench_full["CI Upper"]
+    
+    ci_u_diff = (ci_u_min - ci_u_full) / ci_u_full
+    ci_l_diff = (ci_l_min - ci_l_full) / ci_l_full
+    #ci_iou = st.iou(bench_min["CI"], bench_full["CI"])
+    
+    quality_diff.append([bench, time_saved, avg_diff, ci_u_diff, ci_l_diff])
 
+quality_df = pd.DataFrame(quality_diff, columns=["Benchmark","Time Saved","Average Difference","CI Upper Difference","CI Lower Difference"])
 
-
-
-
+min_config_res.to_csv("optimizer_results/min_config_res.csv",index=False)
+full_config_res.to_csv("optimizer_results/full_config_res.csv",index=False)
+quality_df.to_csv("optimizer_results/quality_df.csv",index=False)
 
 
 
