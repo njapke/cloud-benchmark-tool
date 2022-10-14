@@ -13,6 +13,11 @@ import pandas as pd
 min_setup = pd.read_csv("toml_results/rciw_median_t/optimizer_results/min_config_res.csv")
 quality = pd.read_csv("toml_results/rciw_median_t/optimizer_results/quality_df.csv")
 
+# Only for RCIW median t: filter out invalid benchmarks
+filter_invalid = (min_setup["Average"] != min_setup["CI Upper"]) | (min_setup["Average"] != min_setup["CI Lower"])
+min_setup = min_setup[filter_invalid]
+quality = quality[quality["Benchmark"].isin(min_setup["Benchmark"])]
+
 # filter for reduction
 actual_reduction = min_setup[min_setup["Config"] != "(3, 5, 5)"]
 
