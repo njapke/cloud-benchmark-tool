@@ -108,13 +108,14 @@ def rciw_median_t(data, it = 10000, cl = 99):
 # CI bounds of median with studentized bootstrap
 def ci_bootstrap_median_t(data, it = 10000, cl = 99):
     orig_median = np.median(data)
-    orig_std_dev = np.sqrt(var_median_maritz_jarrett(data))
+    orig_std_dev = np.sqrt(se_bootstrap_median(data, 2000))
     
     samples = rng.choice(data, (it, len(data)))
     # Bootstrap medians
     bs_medians = np.median(samples, axis=1)
     # Bootstrap standard deviation
-    bs_std_dev = np.sqrt(np.array([var_median_maritz_jarrett(x) for x in samples]))
+    # bs_std_dev = np.sqrt(np.array([var_median_maritz_jarrett(x) for x in samples]))
+    bs_std_dev = np.sqrt(np.array([se_bootstrap_median(x, 500) for x in samples]))
     bs_std_dev[bs_std_dev == 0] = 1
     
     # Studentized bootstrap distribution

@@ -46,8 +46,8 @@ ir_setup = df["ir_setup"][1]
 df.drop(columns=["bed_setup", "it_setup", "sr_setup", "ir_setup"], inplace=True)
 
 # Select instability measure and CI method
-calc_inst = st.cv
-calc_ci = st.ci_bootstrap_median_p
+calc_inst = st.rciw_median_t
+calc_ci = st.ci_bootstrap_median_t
 calc_avg = np.median
 #calc_avg = np.mean
 
