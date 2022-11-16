@@ -13,7 +13,6 @@ import (
 	"google.golang.org/api/option"
 	"io"
 	"net"
-	"os/signal"
 	"sync"
 
 	"math/rand"
@@ -110,16 +109,16 @@ func main() {
 
 	// TODO: write to and read from DB
 	// --- Connect to DB (sqlite) ---
-	common.ConnectToDB(common.DbConfig{
+	ConnectToDB(DbConfig{
 		Type: "sqlite",
 		Uri:  ca.SqliteFile,
 	}, ca.CleanDB) // assigns the global variable db
-	defer common.CloseDB() // Defer Closing the database
+	defer CloseDB() // Defer Closing the database
 	// --- Finish connect to DB ---
 
 	// TODO: read benchmarks from db, if no forced reread or db clean
 	log.Debugf("Begin collecting benchmarks of %s", cfg.Name)
-	benchmarks, err := common.CollectBenchmarks(cfg.Name, cfg.Path, cfg.BasePackage)
+	benchmarks, err := CollectBenchmarks(cfg.Name, cfg.Path, cfg.BasePackage)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -171,61 +170,57 @@ func main() {
 	currIrPos.IrPos = 0
 	currIrPos.Mu.Unlock()
 
-	// 75 is all setups without IR
-	for i := 0; i < 1; i++ {
-		// TODO temporary emission of startup script; works perfectly in tests
-		currSetup.Mu.Lock()
-		script := generateStartupScript(cfg.ProjUri, cfg.Tag, cfg.BasePackage, currSetup.Bed, currSetup.Iterations, currSetup.Sr, ca.Ip, ca.BenchmarkListPort, ca.MeasurementReportPort)
-		instances := currSetup.Ir
-		log.Debugf("Test No %d\nSetup: BED = %d, It = %d, SR = %d, IR = %d", i, currSetup.Bed, currSetup.Iterations, currSetup.Sr, currSetup.Ir)
-		currSetup.Mu.Unlock()
-		/*fT, _ := os.Create("tmp")
-		fT.Write(script)
-		fT.Chmod(0777)
-		fT.Close()*/
-		currIrPos.Mu.Lock()
-		currIrPos.IrPos = 0
-		currIrPos.Mu.Unlock()
+	// RUN EXPERIMENT
+	currSetup.Mu.Lock()
+	script := generateStartupScript(cfg.ProjUri, cfg.Tag, cfg.BasePackage, currSetup.Bed, currSetup.Iterations, currSetup.Sr, ca.Ip, ca.BenchmarkListPort, ca.MeasurementReportPort)
+	instances := currSetup.Ir
+	log.Debugf("Experiment Start\nSetup: BED = %d, It = %d, SR = %d, IR = %d", currSetup.Bed, currSetup.Iterations, currSetup.Sr, currSetup.Ir)
+	currSetup.Mu.Unlock()
+	/*fT, _ := os.Create("tmp")
+	fT.Write(script)
+	fT.Chmod(0777)
+	fT.Close()*/
+	currIrPos.Mu.Lock()
+	currIrPos.IrPos = 0
+	currIrPos.Mu.Unlock()
 
-		// upload startup script
-		uploadBytes(script, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, gclientStorage, ctx)
+	// upload startup script
+	uploadBytes(script, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, gclientStorage, ctx)
 
-		listOfInstances := make([]string, 3)
+	listOfInstances := make([]string, 3)
 
-		for j := 0; j < instances; j++ {
-			name := fmt.Sprintf("%s-instance-%d", ca.InstanceName, j)
-			createInstance(name, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, cfg.GCPImage, gclientCompute, ctx)
-			listOfInstances = append(listOfInstances, name)
-			wgIr.Add(1)
-		}
-		log.Debugln(listOfInstances)
-
-		// wait for results
-		wgIr.Wait()
-		// shutdown instances
-		shutdownAllInstances(&listOfInstances, cfg.GCPProject, gclientCompute, ctx)
-
-		// get next setup
-		nextSetup()
+	for j := 0; j < instances; j++ {
+		name := fmt.Sprintf("%s-instance-%d", ca.InstanceName, j)
+		createInstance(name, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, cfg.GCPImage, gclientCompute, ctx)
+		listOfInstances = append(listOfInstances, name)
+		wgIr.Add(1)
 	}
+	log.Debugln(listOfInstances)
 
-	log.Debugln("Finished experiment")
+	// wait for results
+	wgIr.Wait()
+	// shutdown instances
+	shutdownAllInstances(&listOfInstances, cfg.GCPProject, gclientCompute, ctx)
+	// END EXPERIMENT
 
 	// Only end when Crtl+C is pressed
-	c := make(chan os.Signal, 1)   // create channel on os.Signal
-	signal.Notify(c, os.Interrupt) // notify channel on Crtl+C
-	for sig := range c {           // wait and block until notify
-		fmt.Println(sig.String())
-		quitSend <- true
-		quitRecv <- true
-		break // break and end program after notify
-	}
+	//c := make(chan os.Signal, 1)   // create channel on os.Signal
+	//signal.Notify(c, os.Interrupt) // notify channel on Crtl+C
+	//for sig := range c {           // wait and block until notify
+	//	fmt.Println(sig.String())
+	//	quitSend <- true
+	//	quitRecv <- true
+	//	break // break and end program after notify
+	//}
+	quitSend <- true
+	quitRecv <- true
 	inSend.Close()
 	inRecv.Close()
 	wg.Wait()
 	close(quitSend)
 	close(quitRecv)
-	close(c)
+	//close(c)
+	log.Debugln("Finished experiment")
 }
 
 func sendBenchmarks(benchmarks *[]common.Benchmark, conn net.Conn) {
@@ -259,8 +254,6 @@ Loop:
 }
 
 func readMeasurements(conn net.Conn) {
-	//wg.Add(1)
-	//defer wg.Done()
 	defer wgIr.Done() // TODO: unsafe, can be tampered with, maybe not important?
 
 	benchmarks := make([]common.Benchmark, 0, 10)
@@ -295,7 +288,7 @@ func readMeasurements(conn net.Conn) {
 	currIrPos.Mu.Unlock()
 
 	for i := 0; i < len(benchmarks); i++ {
-		benchmarks[i].RecordMeasurement(bedSetup, itSetup, srSetup, irSetup, irPos)
+		RecordMeasurement(&benchmarks[i], bedSetup, itSetup, srSetup, irSetup, irPos)
 	}
 	log.Debugln("Finished writing measurements into db")
 }
@@ -315,21 +308,4 @@ Loop:
 			go readMeasurements(conn)
 		}
 	}
-}
-
-func nextSetup() {
-	currSetup.Mu.Lock()
-	currSetup.Bed += 1
-	if currSetup.Bed > 5 {
-		currSetup.Bed = 1
-		currSetup.Iterations += 1
-		if currSetup.Iterations > 5 {
-			currSetup.Iterations = 1
-			currSetup.Sr += 1
-			if currSetup.Sr > 3 {
-				currSetup.Sr = 1
-			}
-		}
-	}
-	currSetup.Mu.Unlock()
 }

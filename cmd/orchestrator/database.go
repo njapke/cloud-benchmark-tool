@@ -1,11 +1,16 @@
-package common
+package main
 
 import (
+	"cloud-benchmark-tool/common"
 	"database/sql"
-	"errors"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	benchparser "golang.org/x/tools/benchmark/parse"
 	_ "modernc.org/sqlite"
 	"os"
+	"os/exec"
+	"regexp"
+	"strings"
 )
 
 type (
@@ -13,9 +18,19 @@ type (
 		Type string
 		Uri  string
 	}
+
+	queueElem struct {
+		benchmark *common.Benchmark
+		bedSetup  int
+		itSetup   int
+		srSetup   int
+		irSetup   int
+		irPos     int
+	}
 )
 
 var db *sql.DB
+var msrmntQueue chan queueElem
 
 // ConnectToDB creates a database connection.
 // dbConfig contains information on the type of database and location
@@ -47,6 +62,86 @@ func connectToSqlite() {
 
 func CloseDB() {
 	db.Close()
+}
+
+// CollectBenchmarks runs all benchmarks of the given project, and gathers their names
+func CollectBenchmarks(projName string, projPath string, basePackage string) (*[]common.Benchmark, error) {
+	// register project in DB
+	insertProject(projName, basePackage)
+
+	// run all benchmarks and get output
+	cmd := exec.Command("go", "test", "-timeout", "0", "-benchtime", "1x", "-bench", ".", "./...")
+	cmd.Dir = projPath
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		if exiterr, ok := err.(*exec.ExitError); ok {
+			log.Debugf("Exit Status: %d", exiterr.ExitCode())
+		} else {
+			return nil, errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
+		}
+	}
+
+	// allocate list for benchmarks
+	benchmarks := make([]common.Benchmark, 0, 10)
+
+	// split output into lines
+	lines := strings.Split(string(out), "\n")
+
+	// default package
+	pkg := "./"
+
+	// parse output from go test
+	for i := 0; i < len(lines); i++ {
+		isBench, err := regexp.MatchString("^Benchmark", lines[i])
+		if err != nil {
+			return nil, errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
+		}
+
+		if isBench {
+			b, err := benchparser.ParseLine(lines[i])
+			if err != nil {
+				return nil, errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
+			}
+
+			// go test appends -#cpu to every name, and the parser does not remove this suffix
+			// since go test does not consider the suffix part of the name, it has to be removed
+			nameSplit := strings.Split(b.Name, "-")               // split at -
+			nameSuffix := "-" + nameSplit[len(nameSplit)-1]       // get last position (number of cpus used in run)
+			nameTrimmed := strings.TrimSuffix(b.Name, nameSuffix) // remove suffix
+
+			benchmarks = append(benchmarks, common.Benchmark{
+				Name:        nameTrimmed,
+				NameRegexp:  common.MaskNameRegexp(nameTrimmed), // Name needs special format for execution
+				Package:     pkg,
+				ProjectPath: projPath,
+				Measurement: []common.Measurement{},
+			})
+
+			// TODO: register benchmark in DB
+			insertBenchmark(nameTrimmed, pkg, projName)
+
+			continue // go to next iteration
+		}
+
+		isPkg, err := regexp.MatchString("^pkg:", lines[i])
+		if err != nil {
+			return nil, errors.Wrapf(err, "%#v: output: %s", cmd.Args, out)
+		}
+
+		if isPkg {
+			_, after, found := strings.Cut(strings.Fields(lines[i])[1], basePackage)
+			if !found {
+				return nil, errors.New("Base package not found in subpackage string. Maybe misconfigured?")
+			}
+			if strings.HasPrefix(after, "/") {
+				after = "." + after
+			} else {
+				after = "./" + after
+			}
+			pkg = after
+		} // discard no match
+	}
+	return &benchmarks, nil
 }
 
 // initializeDB ensures that the necessary tables are created. If cleanDb is true, the tables are emptied
@@ -188,5 +283,34 @@ func insertMeasurement(bName string, n int, nsPerOp float64, bedSetup int, itSet
 	_, err = statement.Exec(n, nsPerOp, bedSetup, itSetup, srSetup, irSetup, bedPos, itPos, srPos, irPos, bName)
 	if err != nil {
 		log.Fatalln(err.Error())
+	}
+}
+
+func RecordMeasurement(bench *common.Benchmark, bedSetup int, itSetup int, srSetup int, irSetup int, irPos int) {
+	if msrmntQueue == nil {
+		msrmntQueue = make(chan queueElem, 500)
+		go dbQueueConsumer()
+	}
+	currMsrmnt := queueElem{
+		benchmark: bench,
+		bedSetup:  bedSetup,
+		itSetup:   itSetup,
+		srSetup:   srSetup,
+		irSetup:   irSetup,
+		irPos:     irPos,
+	}
+	msrmntQueue <- currMsrmnt
+}
+
+func dbQueueConsumer() {
+	for {
+		elem, more := <-msrmntQueue
+		if !more {
+			return
+		}
+		for i := 0; i < len(elem.benchmark.Measurement); i++ {
+			currMsrmnt := elem.benchmark.Measurement[i]
+			insertMeasurement(elem.benchmark.Name, currMsrmnt.N, currMsrmnt.NsPerOp, elem.bedSetup, elem.itSetup, elem.srSetup, elem.irSetup, currMsrmnt.BedPos, currMsrmnt.ItPos, currMsrmnt.SrPos, elem.irPos)
+		}
 	}
 }
