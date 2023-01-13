@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type (
@@ -31,6 +32,7 @@ type (
 
 var db *sql.DB
 var msrmntQueue chan queueElem
+var queueMu sync.Mutex
 
 // ConnectToDB creates a database connection.
 // dbConfig contains information on the type of database and location
@@ -286,11 +288,13 @@ func insertMeasurement(bName string, n int, nsPerOp float64, bedSetup int, itSet
 	}
 }
 
-func RecordMeasurement(bench *common.Benchmark, bedSetup int, itSetup int, srSetup int, irSetup int, irPos int) {
+func RecordMeasurement(bench *common.Benchmark, bedSetup int, itSetup int, srSetup int, irSetup int, irPos int, wg *sync.WaitGroup) {
+	queueMu.Lock()
 	if msrmntQueue == nil {
 		msrmntQueue = make(chan queueElem, 500)
-		go dbQueueConsumer()
+		go dbQueueConsumer(wg)
 	}
+	queueMu.Unlock()
 	currMsrmnt := queueElem{
 		benchmark: bench,
 		bedSetup:  bedSetup,
@@ -302,7 +306,13 @@ func RecordMeasurement(bench *common.Benchmark, bedSetup int, itSetup int, srSet
 	msrmntQueue <- currMsrmnt
 }
 
-func dbQueueConsumer() {
+func CloseMeasurementQueue() {
+	close(msrmntQueue)
+}
+
+func dbQueueConsumer(wg *sync.WaitGroup) {
+	wg.Add(1)
+	defer wg.Done()
 	for {
 		elem, more := <-msrmntQueue
 		if !more {

@@ -60,7 +60,7 @@ type (
 )
 
 var wg sync.WaitGroup
-var wgIr sync.WaitGroup
+var wgIrResults sync.WaitGroup
 var currSetup setup
 var currIrPos irPosCounter
 
@@ -193,12 +193,12 @@ func main() {
 		name := fmt.Sprintf("%s-instance-%d", ca.InstanceName, j)
 		createInstance(name, ca.InstanceName, cfg.GCPProject, cfg.GCPBucket, cfg.GCPImage, gclientCompute, ctx)
 		listOfInstances = append(listOfInstances, name)
-		wgIr.Add(1)
+		wgIrResults.Add(1)
 	}
 	log.Debugln(listOfInstances)
 
 	// wait for results
-	wgIr.Wait()
+	wgIrResults.Wait()
 	// shutdown instances
 	shutdownAllInstances(&listOfInstances, cfg.GCPProject, gclientCompute, ctx)
 	// END EXPERIMENT
@@ -216,6 +216,7 @@ func main() {
 	quitRecv <- true
 	inSend.Close()
 	inRecv.Close()
+	CloseMeasurementQueue()
 	wg.Wait()
 	close(quitSend)
 	close(quitRecv)
@@ -224,6 +225,7 @@ func main() {
 }
 
 func sendBenchmarks(benchmarks *[]common.Benchmark, conn net.Conn) {
+	// TODO should be ok without wait group
 	wg.Add(1)
 	defer wg.Done()
 	encoder := gob.NewEncoder(conn)
@@ -254,7 +256,7 @@ Loop:
 }
 
 func readMeasurements(conn net.Conn) {
-	defer wgIr.Done() // TODO: unsafe, can be tampered with, maybe not important?
+	defer wgIrResults.Done() // TODO: unsafe, can be tampered with, maybe not important?
 
 	benchmarks := make([]common.Benchmark, 0, 10)
 
@@ -288,9 +290,9 @@ func readMeasurements(conn net.Conn) {
 	currIrPos.Mu.Unlock()
 
 	for i := 0; i < len(benchmarks); i++ {
-		RecordMeasurement(&benchmarks[i], bedSetup, itSetup, srSetup, irSetup, irPos)
+		RecordMeasurement(&benchmarks[i], bedSetup, itSetup, srSetup, irSetup, irPos, &wg)
 	}
-	log.Debugln("Finished writing measurements into db")
+	log.Debugln("Finished adding measurements into queue ")
 }
 
 func readMeasurementHandler(in *net.Listener, quit <-chan bool) {

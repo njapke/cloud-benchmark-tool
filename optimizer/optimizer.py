@@ -33,7 +33,7 @@ class ConfigCounter:
         raise StopIteration
 
 # read data
-df = pd.read_csv("toml.csv", index_col="m_id")
+df = pd.read_csv("prometheus-common.csv", index_col="m_id")
 
 # get all benchmarks
 benchmarks = np.array(df["b_name"].drop_duplicates())
@@ -117,7 +117,6 @@ for bench in benchmarks:
     
     ci_u_diff = (ci_u_min - ci_u_full) / ci_u_full
     ci_l_diff = (ci_l_min - ci_l_full) / ci_l_full
-    #ci_iou = st.iou(bench_min["CI"], bench_full["CI"])
     
     quality_diff.append([bench, time_saved, avg_diff, ci_u_diff, ci_l_diff])
 

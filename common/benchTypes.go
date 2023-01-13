@@ -27,7 +27,7 @@ type (
 	}
 )
 
-// maskNameRegexp turns a benchmark name, e.g., BenchmarkNumberOne/20, into a regular expression,
+// MaskNameRegexp turns a benchmark name, e.g., BenchmarkNumberOne/20, into a regular expression,
 // which will never accidentally execute other benchmarks.
 // For some reason, '/' has a special meaning in "go test -bench x" and the beginning (^) and end ($)
 // have to be marked in every substring around a '/'.
@@ -48,6 +48,13 @@ func MaskNameRegexp(name string) string {
 }
 
 func (bench *Benchmark) RunBenchmark(bed int, itPos int, srPos int) error {
+	cmd := exec.Command("go", "clean", "--cache")
+	//cmd.Dir =
+	_, err := cmd.CombinedOutput()
+	if err != nil {
+		return errors.Wrapf(err, "%#v: error while running go clean --cache.", cmd.Args)
+	}
+
 	for i := 0; i < bed; i++ { // each iteration on this level is 1s of benchtime, repeat until bed is reached
 		cmd := exec.Command("go", "test", "-benchtime", "1s", "-bench", bench.NameRegexp, bench.Package)
 		cmd.Dir = bench.ProjectPath

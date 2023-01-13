@@ -1,0 +1,31 @@
+# TOML file to configure perf runner
+
+# Name of the project
+name = "prometheus-common"
+
+# Path to the project to benchmark
+path = "/home/njapke/common"
+
+projUri = "https://github.com/prometheus/common.git"
+
+tag = "v0.37.0"
+
+basePackage = "github.com/prometheus/common"
+
+gcpProject = "masterarbeit-353409"
+
+gcpBucket = "instance-runner-startup-script"
+
+gcpImage = "arch-benchmark-base"
+
+# Benchmark Execution Duration (baseline: 1s)
+bed = 5
+
+# Number of executions of single benchmark during a suite run (baseline: 5)
+it = 5
+
+# Number of suite runs (baseline: 3)
+sr = 3
+
+# Number of instance runs (baseline: 3)
+ir = 3
