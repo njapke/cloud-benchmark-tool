@@ -11,6 +11,7 @@ import scipy as sp
 from scipy.interpolate import interp1d
 from scipy.special import betainc
 from scipy.special import beta
+from scipy.stats.mstats import mjci
 #from scipy.special import factorial
 
 # Initialize RNG
@@ -87,7 +88,7 @@ def ci_bootstrap_mean_t(data, it = 10000, cl = 99):
     bs_means = np.mean(samples, axis=1)
     # Bootstrap standard deviation
     bs_std_dev = np.sqrt(np.sum(np.power((samples.T - bs_means).T, 2), axis=1) / (len(data)-1))
-    bs_std_dev[bs_std_dev == 0] = 1
+    bs_std_dev[bs_std_dev == 0] = 0.000001
     
     # Studentized bootstrap distribution
     t_star = (bs_means - orig_mean) / (bs_std_dev / np.sqrt(len(data)))
@@ -108,15 +109,18 @@ def rciw_median_t(data, it = 10000, cl = 99):
 # CI bounds of median with studentized bootstrap
 def ci_bootstrap_median_t(data, it = 10000, cl = 99):
     orig_median = np.median(data)
-    orig_std_dev = np.sqrt(se_bootstrap_median(data, 2000))
+    # orig_std_dev = np.sqrt(se_bootstrap_median(data, 2000))
+    orig_std_dev = mjci(data, prob=[0.5])
     
     samples = rng.choice(data, (it, len(data)))
     # Bootstrap medians
     bs_medians = np.median(samples, axis=1)
     # Bootstrap standard deviation
     # bs_std_dev = np.sqrt(np.array([var_median_maritz_jarrett(x) for x in samples]))
-    bs_std_dev = np.sqrt(np.array([se_bootstrap_median(x, 500) for x in samples]))
-    bs_std_dev[bs_std_dev == 0] = 1
+    # bs_std_dev = np.sqrt(np.array([se_bootstrap_median(x, 500) for x in samples]))
+    # bs_std_dev = np.sqrt(np.array([mjci(x, prob=[0.5]) for x in samples]))
+    bs_std_dev = np.sqrt(np.squeeze(mjci(samples, prob=[0.5], axis=1)))
+    bs_std_dev[bs_std_dev == 0] = 0.000001
     
     # Studentized bootstrap distribution
     t_star = (bs_medians - orig_median) / bs_std_dev

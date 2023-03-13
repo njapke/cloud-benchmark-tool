@@ -33,7 +33,7 @@ class ConfigCounter:
         raise StopIteration
 
 # read data
-df = pd.read_csv("prometheus-common.csv", index_col="m_id")
+df = pd.read_csv("zap.csv", index_col="m_id")
 
 # get all benchmarks
 benchmarks = np.array(df["b_name"].drop_duplicates())
@@ -46,10 +46,10 @@ ir_setup = df["ir_setup"][1]
 df.drop(columns=["bed_setup", "it_setup", "sr_setup", "ir_setup"], inplace=True)
 
 # Select instability measure and CI method
-calc_inst = st.rciw_median_t
-calc_ci = st.ci_bootstrap_median_t
-calc_avg = np.median
-#calc_avg = np.mean
+calc_inst = st.cv
+calc_ci = st.ci_bootstrap_mean_p
+# calc_avg = np.median
+calc_avg = np.mean
 
 # Select threshold to mark benchmarks as unstable
 ts = 0.01
@@ -58,7 +58,7 @@ res = []
 # ir is always 3
 for b in range(len(benchmarks)):
     bench = benchmarks[b]
-    for c in ConfigCounter(3,5,5): # sr, it, bed
+    for c in ConfigCounter(sr_setup, it_setup, bed_setup): # sr, it, bed
         if c[0]*c[1] < 3:
             continue
         dft = df[(df["b_name"] == bench)
@@ -100,7 +100,7 @@ for b in range(len(benchmarks)):
     min_config_idx.append(min_inst_idx)
 
 min_config_res = result_df.iloc[min_config_idx]
-full_config_res = result_df[result_df["Config"] == (3,5,5)]
+full_config_res = result_df[result_df["Config"] == (sr_setup, it_setup, bed_setup)]
 
 quality_diff = []
 for bench in benchmarks:
