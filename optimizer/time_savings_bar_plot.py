@@ -187,4 +187,4 @@ subfigs[-1].set_facecolor('none')
 fig.legend(handles=[l1,l2,l3,l4,l5], loc='lower right')
 
 # plt.close(fig)
-fig.savefig("time_savings2.pdf")
+# fig.savefig("time_savings2.pdf")
