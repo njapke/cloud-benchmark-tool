@@ -19,7 +19,7 @@ log4j2#org.apache.logging.log4j.perf.jmh.UnboxBenchmark.boxLong#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput7Params#configFileName=perf5AsyncApndXferQNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput8Params#configFileName=perf5AsyncApndDsrptrNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput4Params#configFileName=perf5AsyncApndNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateArrayContextDataTriConsumer#count=500&length=20,200,-0.001212483865100705,-7.93665549371313e-05,-0.0037950799189152297
+log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateArrayContextDataTriConsumer#count=500&length=20,200,-0.0012124838651007,-7.93665549371313e-05,-0.0037950799189152
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLogbackBenchmark.throughput6Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderParamsBenchmark.param3Log4j2RAF#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.MDCFilterBenchmark.log4jThreadContextFilter#size=0,0,0.0,0.0,0.0
@@ -110,7 +110,7 @@ log4j2#org.apache.logging.log4j.perf.jmh.ThreadLocalVsPoolBenchmark.threadLocal#
 log4j2#org.apache.logging.log4j.perf.jmh.ClocksBenchmark.oldCachedClock#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.test10_getMessageUsingReflection#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadsafeDateFormatBenchmark.cachedThrdLocalCustomFormat#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=500&threadContextMapAlias=CopyOpenHash,423,0.013226969279363423,0.017684135003260347,0.011875402490562114
+log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=500&threadContextMapAlias=CopyOpenHash,423,0.0132269692793634,0.0176841350032603,0.0118754024905621
 log4j2#org.apache.logging.log4j.perf.jmh.SimpleBenchmark.testBaselineResponseTime#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.PatternLayoutBenchmark.serializableMCDEx#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderThrowableBenchmark.julFile#,0,0.0,0.0,0.0
@@ -126,10 +126,9 @@ log4j2#org.apache.logging.log4j.perf.jmh.CollectionsBenchmark.iterMap3Elements#,
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncLoggersBenchmark.throughput10Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.get#count=500&threadContextMapAlias=NoGcOpenHash,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadLocalVsPoolBenchmark.newInstance#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeH2Message#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.JdbcAppenderBenchmark.testThroughputH2Message#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.GelfLayoutBenchmark.log4j2Gelf#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=50&threadContextMapAlias=NoGcOpenHash,404,0.07878924787292588,0.07966927895986728,0.0815299726433592
+log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=50&threadContextMapAlias=NoGcOpenHash,404,0.0787892478729258,0.0796692789598672,0.0815299726433592
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderParamsBenchmark.param3Log4j1Concat#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.get#count=500&threadContextMapAlias=Default,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.Log4j2AppenderComparisonBenchmark.end2endRewrite#,0,0.0,0.0,0.0
@@ -150,7 +149,6 @@ log4j2#org.apache.logging.log4j.perf.jmh.ConfiguratorInitializeBenchmark.initial
 log4j2#org.apache.logging.log4j.perf.jmh.StringEncodingBenchmark.defaultStringGetBytesString#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.putAllMap#count=500&length=20,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput6Params#configFileName=perf5AsyncApndDsrptrNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputH2Message#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadsafeDateFormatBenchmark.baseline#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput4Params#configFileName=perf5AsyncApndDsrptrNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderBenchmark.logbackAsyncFile#,0,0.0,0.0,0.0
@@ -193,7 +191,6 @@ log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.putAndRemove#cou
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.getValueHashContextData#count=5&length=20,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.legacyInjectWithoutProperties#count=500&threadContextMapAlias=Default,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.putAndRemove#count=500&threadContextMapAlias=Default,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputHSQLDBException#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderBenchmark.logbackFile#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.message.ParameterFormatterBenchmark.latency5Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.test07_getReflectiveCallerClassUtility#,0,0.0,0.0,0.0
@@ -209,11 +206,11 @@ log4j2#org.apache.logging.log4j.perf.jmh.AsyncLoggersBenchmark.throughput3Params
 log4j2#org.apache.logging.log4j.perf.jmh.MemoryHandlerJULBenchmark.throughput7Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput6Params#configFileName=perf5AsyncApndNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncLoggersBenchmark.throughputSimple#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.StringBuilderEscapeBenchmark.escapeXmlLargeString#,296,0.010353146813040972,0.012817331100851563,0.008938599291264606
+log4j2#org.apache.logging.log4j.perf.jmh.StringBuilderEscapeBenchmark.escapeXmlLargeString#,296,0.0103531468130409,0.0128173311008515,0.0089385992912646
 log4j2#org.apache.logging.log4j.perf.jmh.NanotimeBenchmark.latency_nanotime#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithoutProperties#count=500&threadContextMapAlias=NoGcSortedArray,95,0.0006637240100873711,0.0022629305383232014,0.0001824486892670005
+log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithoutProperties#count=500&threadContextMapAlias=NoGcSortedArray,95,0.0006637240100873,0.0022629305383232,0.000182448689267
 log4j2#org.apache.logging.log4j.perf.jmh.Log4j2AppenderComparisonBenchmark.end2endConsole#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.putAllArrayContextData#count=500&length=20,70,0.0005813286948987223,0.0017474399661789948,9.9338719701187e-05
+log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.putAllArrayContextData#count=500&length=20,70,0.0005813286948987,0.0017474399661789,9.9338719701187e-05
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput4Params#configFileName=perf5AsyncApndMpscQNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderWithLocationBenchmark.log4j2File#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.legacyInjectWithoutProperties#count=5&threadContextMapAlias=CopySortedArray,0,0.0,0.0,0.0
@@ -223,19 +220,18 @@ log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLogbackBenchmark.throughpu
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput5Params#configFileName=perf5AsyncApndXferQNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.get#count=5&threadContextMapAlias=CopyOpenHash,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ConcurrentAsyncLoggerToFileBenchmark.singleLoggingThread#asyncLoggerType=ASYNC_CONTEXT&queueFullPolicy=ENQUEUE,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=500&threadContextMapAlias=NoGcSortedArray,120,0.0005391685317470494,0.0014393930893223464,9.833536994374401e-06
+log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=500&threadContextMapAlias=NoGcSortedArray,120,0.000539168531747,0.0014393930893223,9.8335369943744e-06
 log4j2#org.apache.logging.log4j.perf.jmh.SimpleBenchmark.testIsEnabledLevelThroughput#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithoutProperties#count=50&threadContextMapAlias=CopyOpenHash,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.MarkerFilterBenchmark.logbackParentMarker#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderParamsBenchmark.param3Log4j2File#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.PatternLayoutBenchmark.byteArrayMEx#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeH2Exception#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.DebugDisabledBenchmark.log4jClassicDebugStringConcatenation#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j1Benchmark.throughput5Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AbstractStringLayoutStringEncodingBenchmark.utf8GetBytes#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.CollectionsBenchmark.iterArraySet1Element#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.baseline#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateHashContextDataTriConsumer#count=500&length=20,427,0.019873187491204456,0.019780567463829304,0.014496685700246138
+log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateHashContextDataTriConsumer#count=500&length=20,427,0.0198731874912044,0.0197805674638293,0.0144966857002461
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLogbackBenchmark.throughput9Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.MemoryHandlerJULBenchmark.throughput8Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncLoggersBenchmark.throughput5Params#,0,0.0,0.0,0.0
@@ -361,7 +357,7 @@ log4j2#org.apache.logging.log4j.perf.jmh.MarkerFilterBenchmark.log4jParentMarker
 log4j2#org.apache.logging.log4j.perf.jmh.TextEncoderHelperBenchmark.encodeMCD#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderParamsBenchmark.param1Log4j2File#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j1Benchmark.throughputSimple#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.putAndRemove#count=500&threadContextMapAlias=NoGcSortedArray,130,8.836341527671278e-05,0.001210254418829716,-0.0006256459765649244
+log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.putAndRemove#count=500&threadContextMapAlias=NoGcSortedArray,130,8.836341527671278e-05,0.0012102544188297,-0.0006256459765649
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.legacyInjectWithoutProperties#count=5&threadContextMapAlias=Default,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncLoggersBenchmark.throughput4Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j1Benchmark.throughput10Params#,0,0.0,0.0,0.0
@@ -386,7 +382,7 @@ log4j2#org.apache.logging.log4j.message.ParameterFormatterBenchmark.latency9Para
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput7Params#configFileName=perf5AsyncApndNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput3Params#configFileName=perf5AsyncApndDsrptrNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.PatternLayoutBenchmark.byteArrayMD#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=50&threadContextMapAlias=CopyOpenHash,380,0.02256475951938447,0.02564311579224156,0.021021153944478885
+log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=50&threadContextMapAlias=CopyOpenHash,380,0.0225647595193844,0.0256431157922415,0.0210211539444788
 log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.test12_getClassContextViaSecurityManager#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ParameterizedMessageInliningBenchmark.format0_inlined2#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughputSimple#configFileName=perf5AsyncApndDsrptrNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
@@ -397,7 +393,7 @@ log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.get#count=50&thr
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.putAllArrayContextData#count=5&length=20,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.CollectionsBenchmark.iterMap1Element#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FormatterLoggerBenchmark.latencyBaseline#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateHashContextDataBiConsumer#count=500&length=20,332,0.008793811991761913,0.010139688615752164,0.005357829277838303
+log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateHashContextDataBiConsumer#count=500&length=20,332,0.0087938119917619,0.0101396886157521,0.0053578292778383
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.get#count=5&threadContextMapAlias=NoGcOpenHash,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.getValueMap#count=5&length=20,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.getValueArrayContextData#count=500&length=20,0,0.0,0.0,0.0
@@ -414,7 +410,7 @@ log4j2#org.apache.logging.log4j.perf.jmh.ClocksBenchmark.cachedClock#,0,0.0,0.0,
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadsafeDateFormatBenchmark.threadLocalSimpleDateFmt#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.PatternLayoutBenchmark.byteArrayMCNoSpace#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.putAllHashContextData#count=500&length=20,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=500&threadContextMapAlias=NoGcOpenHash,450,0.024839937373123837,0.027034924031983664,0.022171036426012473
+log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithProperties#count=500&threadContextMapAlias=NoGcOpenHash,450,0.0248399373731238,0.0270349240319836,0.0221710364260124
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput2Params#configFileName=perf5AsyncApndMpscQNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.StringBuilderEscapeBenchmark.escapeJsonLargeString#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.MarkerFilterBenchmark.logbackTooFine#,0,0.0,0.0,0.0
@@ -427,7 +423,6 @@ log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2LocationBenchmark.th
 log4j2#org.apache.logging.log4j.perf.jmh.LoggerConfigBenchmark.testBaseline#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.DebugDisabledBenchmark.log4jClassicIsDebugEnabled#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.legacyInjectWithoutProperties#count=500&threadContextMapAlias=CopySortedArray,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputH2Exception#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLogbackBenchmark.throughput11Params#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput1Param#configFileName=perf5AsyncApndNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.putAllHashContextData#count=5&length=20,0,0.0,0.0,0.0
@@ -456,7 +451,6 @@ log4j2#org.apache.logging.log4j.perf.jmh.ThreadsafeDateFormatBenchmark.fastDateF
 log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.test03_getCallerClassNameReflectively#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.cloneArrayContextData#count=5&length=20,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.cloneMap#count=5&length=20,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputHSQLDBMessage#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.injectWithoutProperties#count=50&threadContextMapAlias=CopySortedArray,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j1LocationBenchmark.throughputSimple#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.MemoryHandlerJULBenchmark.throughput2Params#,0,0.0,0.0,0.0
@@ -464,8 +458,7 @@ log4j2#org.apache.logging.log4j.perf.jmh.ThreadsafeDateFormatBenchmark.synchroni
 log4j2#org.apache.logging.log4j.perf.jmh.MDCFilterBenchmark.slf4jMDCFilter#size=4,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.get#count=50&threadContextMapAlias=NoGcSortedArray,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.Log4j2AppenderComparisonBenchmark.end2endRAF#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateArrayContextDataBiConsumer#count=500&length=20,362,-0.0009443899449944528,0.000918126595665312,-0.005082526766975561
-log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.test05_getStackTraceClassForClassName#,0,0.0,0.0,0.0
+log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.iterateArrayContextDataBiConsumer#count=500&length=20,362,-0.0009443899449944,0.0009181265956653,-0.0050825267669755
 log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.reflectionUtilGetClass#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.legacyInjectWithoutProperties#count=50&threadContextMapAlias=Default,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.SortedArrayVsHashMapBenchmark.getValueArrayContextData#count=5&length=20,0,0.0,0.0,0.0
@@ -476,7 +469,6 @@ log4j2#org.apache.logging.log4j.perf.jmh.StringEncodingBenchmark.iso8859_1Custom
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderBenchmark.log4j2File#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.PatternLayoutBenchmark.serializableMEx#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j1Benchmark.throughput4Params#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeHSQLDBException#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.message.ParameterFormatterBenchmark.latency5ParamsV2#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.AsyncAppenderLog4j2Benchmark.throughput11Params#configFileName=perf5AsyncApndNoLoc-noOpAppender.xml,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderWithLocationBenchmark.log4j2RAF#,0,0.0,0.0,0.0
@@ -502,7 +494,6 @@ log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderParamsBenchmark.param1Logba
 log4j2#org.apache.logging.log4j.perf.jmh.FileAppenderThrowableBenchmark.log4j2ExtendedThrowable#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ConcurrentAsyncLoggerToFileBenchmark.concurrentLoggingThreads#asyncLoggerType=ASYNC_CONTEXT&queueFullPolicy=SYNCHRONOUS,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.StringEncodingBenchmark.usAsciiStringGetBytesString#,0,0.0,0.0,0.0
-log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeHSQLDBMessage#,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.legacyInjectWithProperties#count=5&threadContextMapAlias=CopySortedArray,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.ThreadContextBenchmark.legacyInjectWithProperties#count=5&threadContextMapAlias=CopyOpenHash,0,0.0,0.0,0.0
 log4j2#org.apache.logging.log4j.perf.jmh.Log4j2AppenderComparisonBenchmark.end2endDirectConsole#,0,0.0,0.0,0.0

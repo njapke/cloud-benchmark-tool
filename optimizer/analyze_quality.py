@@ -36,15 +36,15 @@ method_map = {"cv__mean__ci_bootstrap_mean_p":"Mean (CV)",
               "rmad_median_p":"Median (RMAD)"}
 
 # input data
-path_of_projects = "go_optimization"
-full_config_time = 3*5*5 # go
-full_config_string = "(3, 5, 5)"
+# path_of_projects = "go_optimization"
+# full_config_time = 3*5*5 # go
+# full_config_string = "(3, 5, 5)"
 # path_of_projects = "laaber_optimization_warmup"
 # full_config_time = 5*50 # java warmup
 # full_config_string = "(5, 50)"
-# path_of_projects = "laaber_optimization_nowarmup"
-# full_config_time = 5*100 # java no warmup
-# full_config_string = "(5, 100)"
+path_of_projects = "laaber_optimization_nowarmup"
+full_config_time = 5*100 # java no warmup
+full_config_string = "(5, 100)"
 
 # get sorted list of all files
 projects = list(os.walk(path_of_projects))[0][1]
@@ -97,6 +97,8 @@ for project in projects:
         abs_avg_diff = np.abs(np.array(quality["Average Difference"]))
         leq001 = len(abs_avg_diff[abs_avg_diff <= 0.01]) / len(abs_avg_diff)
         leq003 = len(abs_avg_diff[abs_avg_diff <= 0.03]) / len(abs_avg_diff)
+        leq005 = len(abs_avg_diff[abs_avg_diff <= 0.05]) / len(abs_avg_diff)
+        leq010 = len(abs_avg_diff[abs_avg_diff <= 0.1]) / len(abs_avg_diff)
         # perc_avg = np.percentile(abs_avg_diff, [1,10,25,50,75,90,99], method="closest_observation")
         
         # ci diff
@@ -115,9 +117,9 @@ for project in projects:
             method_col = np.concatenate((method_col, np.repeat([method_map[folder]],N)))
         
         
-        res.append([project, folder, max_time_s, max_time_h, min_time_s, min_time_h, time_saved, time_saved_p, leq001, leq003, worst_ci_u, worst_ci_lo])
+        res.append([project, folder, max_time_s, max_time_h, min_time_s, min_time_h, time_saved, time_saved_p, leq001, leq003, leq005, leq010, worst_ci_u, worst_ci_lo])
     
-    result_df = pd.DataFrame(res, columns=["Project","Method","Max Time in s","Max Time in h","Min Time in s","Min Time in h","Time Saved","Time Saved %","Fraction of leq 0.01 change","Fraction of leq 0.03 change","CI Lower Dev","CI Upper Dev"])
+    result_df = pd.DataFrame(res, columns=["Project","Method","Max Time in s","Max Time in h","Min Time in s","Min Time in h","Time Saved","Time Saved %","Fraction of leq 0.01 change","Fraction of leq 0.03 change","Fraction of leq 0.05 change","Fraction of leq 0.1 change","CI Lower Dev","CI Upper Dev"])
     avg_dev_df = pd.DataFrame({"Average Difference":avg_dev_col, "Method":method_col})
     result_df.to_csv(data_path+"/quality_analysis.csv",index=False)
     

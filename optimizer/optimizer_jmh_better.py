@@ -35,20 +35,21 @@ class ConfigCounter:
             return (fork+1,it+1)
         raise StopIteration
 
-data_path = "/home/njapke/TU_Berlin/Doktor/Paper Projects/uoptime/git/cloud-benchmark-tool/optimizer/laaber_preprocessed"
+# data_path = "laaber_preprocessed"
+data_path = "tmp"
 
 # get sorted list of all files
 files = list(os.walk(data_path))[0][2]
 files.sort()
 
 list_of_instability_funcs = [(st.cv, np.mean, st.ci_bootstrap_mean_p),
-                             (st.cv, np.median, st.ci_bootstrap_median_p),
-                             (st.rmad, np.mean, st.ci_bootstrap_mean_p),
-                             (st.rmad, np.median, st.ci_bootstrap_median_p),
-                             (st.rciw_mean_p, np.mean, st.ci_bootstrap_mean_p),
-                             (st.rciw_mean_t, np.mean, st.ci_bootstrap_mean_t),
-                             (st.rciw_median_p, np.median, st.ci_bootstrap_median_p),]
-                             # (st.rciw_median_t, np.median, st.ci_bootstrap_median_t),]
+                              (st.cv, np.median, st.ci_bootstrap_median_p),
+                              (st.rmad, np.mean, st.ci_bootstrap_mean_p),
+                              (st.rmad, np.median, st.ci_bootstrap_median_p),
+                              (st.rciw_mean_p, np.mean, st.ci_bootstrap_mean_p),
+                              (st.rciw_mean_t, np.mean, st.ci_bootstrap_mean_t),
+                              (st.rciw_median_p, np.median, st.ci_bootstrap_median_p),]
+                              # (st.rciw_median_t, np.median, st.ci_bootstrap_median_t),]
 
 exec_times = []
 for file in files:
@@ -65,14 +66,14 @@ for file in files:
     df.drop(columns=["it_setup", "fork_setup"], inplace=True)
     
     # remove warmup
-    # df = df[df["it_pos"] > 50]
-    # df["it_pos"] = df["it_pos"] - 50
-    # it_setup = it_setup - 50
+    df = df[df["it_pos"] > 50]
+    df["it_pos"] = df["it_pos"] - 50
+    it_setup = it_setup - 50
     
-    # for bench in benchmarks:
-    #     dat = df[df["b_name"] == bench]
-    #     if len(np.array(dat["ns_per_op"])) == 0:
-    #         print(file + ": " + bench + " is empty")
+    for bench in benchmarks:
+        dat = df[df["b_name"] == bench]
+        if len(np.array(dat["ns_per_op"])) == 0:
+            print(file + ": " + bench + " is empty")
     
     for inst_funcs in list_of_instability_funcs:
         print("Using instability function setup "+str(inst_funcs))
@@ -172,7 +173,8 @@ for file in files:
         # create result folder
         proj_name = file[:-4]
         method_name = calc_inst.__name__+"__"+calc_avg.__name__+"__"+calc_ci.__name__
-        full_result_path = "optimizer_results/"+proj_name+"/"+method_name
+        # full_result_path = "optimizer_results/"+proj_name+"/"+method_name
+        full_result_path = "tmp/opt/"+proj_name+"/"+method_name
         Path(full_result_path).mkdir(parents=True, exist_ok=True)
         
         # write results
@@ -180,6 +182,6 @@ for file in files:
         full_config_res.to_csv(full_result_path+"/full_config_res.csv",index=False)
         quality_df.to_csv(full_result_path+"/quality_df.csv",index=False)
 
-exec_times_df = pd.DataFrame(exec_times, columns=["File","Instability Functions","Execution Time"])
-exec_times_df.to_csv("optimizer_results/exec_times_df.csv",index=False)
+# exec_times_df = pd.DataFrame(exec_times, columns=["File","Instability Functions","Execution Time"])
+# exec_times_df.to_csv("optimizer_results/exec_times_df.csv",index=False)
 print("Finished")

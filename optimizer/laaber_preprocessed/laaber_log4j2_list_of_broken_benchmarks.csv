@@ -1,0 +1,10 @@
+b_name
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeH2Message#
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputH2Message#
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputHSQLDBException#
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeH2Exception#
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputH2Exception#
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testThroughputHSQLDBMessage#
+log4j2#org.apache.logging.log4j.perf.jmh.ReflectionBenchmark.test05_getStackTraceClassForClassName#
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeHSQLDBException#
+log4j2#org.apache.logging.log4j.perf.jmh.JpaAppenderBenchmark.testResponseTimeHSQLDBMessage#
